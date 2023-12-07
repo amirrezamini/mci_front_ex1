@@ -1,24 +1,15 @@
 <script setup lang="ts">
 const { $api } = useNuxtApp();
 
-const users = ref<any>([])
+const loading = ref<boolean>(true);
 
-const handleSubmit = async (): Promise<void> => {
-    try {
-        const response = await $api.user.getUsers()
-        users.value = response
-    } catch (e: unknown) {
-
-    }
-}
-
-onMounted(() => {
-    handleSubmit()
-})
+const users = await $api.user.getUsers().finally(() => {
+  loading.value = !loading.value;
+});
 </script>
 
 <template>
-    <v-container>
-        <UsersTable :users="users" />
-    </v-container>
+  <v-container>
+    <UsersTable :loading="loading" :users="users" />
+  </v-container>
 </template>

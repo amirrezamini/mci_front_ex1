@@ -1,10 +1,10 @@
-import HttpFactory from '~/repository/factory';
+import HttpFactory from "~/repository/factory";
 
 class UserModule extends HttpFactory {
-  private RESOURCE = '/users';
+  private RESOURCE = "/users";
 
   async getUsers(): Promise<any> {
-    return await this.call<any>('GET', `${this.RESOURCE}/`)
+    return await this.call<any>("GET", `${this.RESOURCE}/`);
   }
 }
 

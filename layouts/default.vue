@@ -1,21 +1,19 @@
 <script setup lang="ts">
-const drawer = ref<boolean>(true)
+const drawer = ref<boolean>(false);
+
+const toggleDrawer = () => {
+  drawer.value = !drawer.value;
+};
 </script>
 
 <template>
-    <v-app>
-        <v-app-bar flat :border="true">
-            <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-        </v-app-bar>
-        <v-navigation-drawer v-model="drawer">
-            <v-list nav>
-                <v-list-item prepend-icon="mdi-email" title="Welcome" value="inbox"></v-list-item>
-                <v-list-item prepend-icon="mdi-account-supervisor-circle" title="Menu 1" value="supervisors"></v-list-item>
-                <v-list-item prepend-icon="mdi-clock-start" title="Menu 2" value="clockin"></v-list-item>
-            </v-list>
-        </v-navigation-drawer>
-        <v-main>
-            <slot />
-        </v-main>
-    </v-app>
+  <v-app>
+    <v-layout :full-height="true">
+      <header-component @click="toggleDrawer()" />
+      <v-main>
+        <sidebar-component :drawer="drawer" />
+        <slot />
+      </v-main>
+    </v-layout>
+  </v-app>
 </template>

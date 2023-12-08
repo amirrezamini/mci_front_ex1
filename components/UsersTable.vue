@@ -4,12 +4,19 @@ interface Props {
   users: User[];
 }
 
+interface Emits {
+  (e: "click"): void;
+}
+
 const p = withDefaults(defineProps<Props>(), {
   loading: true,
   users: () => [],
 });
 
+const emits = defineEmits<Emits>();
+
 const headers: string[] = ["Id", "Name", "City"];
+
 const records = ref<number>(10);
 const page = ref<number>(1);
 const length = ref<number>(10);
@@ -49,9 +56,9 @@ const filteredUsers = computed(() =>
               id="records"
               v-model="records"
               :disabled="p.loading"
-              density="compact"
               :hide-details="true"
               :items="[10, 25, 100]"
+              density="compact"
               name="records"
               variant="outlined"
             ></v-select>
@@ -78,6 +85,7 @@ const filteredUsers = computed(() =>
                 :disabled="p.loading"
                 icon="mdi-filter"
                 variant="text"
+                @click="emits('click')"
               />
             </template>
           </v-tooltip>

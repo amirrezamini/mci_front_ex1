@@ -24,6 +24,7 @@ const length = ref<number>(10);
 watch(
   records,
   (value: number) => {
+    page.value = 1;
     length.value = Math.ceil(p.users.length / value);
   },
   { immediate: true },

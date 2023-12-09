@@ -10,5 +10,5 @@ interface Input {
   header: keyof User;
   condition: FilterCondition;
   value: string;
-  error: string
+  error: string;
 }

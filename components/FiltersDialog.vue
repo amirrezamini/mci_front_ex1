@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface Emits {
-  (e: "search", value: Input[]): void;
+  (e: "searchUser", value: Input[]): void;
 }
 
 const emits = defineEmits<Emits>();
@@ -40,6 +40,9 @@ const validateInputs = (): boolean => {
   if (!id || +id < 0) {
     inputs.value[0].error = "Id is invalid!";
     status = false;
+  } else if (+id < 1 && inputs.value[0].condition === "<") {
+    inputs.value[0].error = "The minimum value for this condition is 1!";
+    status = false;
   }
 
   if (inputs.value[1]) {
@@ -67,7 +70,7 @@ const validateInputs = (): boolean => {
 
 const search = () => {
   if (validateInputs()) {
-    emits("search", inputs.value);
+    emits("searchUser", inputs.value);
   }
 };
 </script>
@@ -104,9 +107,9 @@ const search = () => {
       New Rule
     </v-btn>
     <div class="d-flex justify-center mt-10">
-      <v-btn width="200" color="#5865f2" variant="flat" @click="search()"
-        >Search</v-btn
-      >
+      <v-btn width="200" color="#5865f2" variant="flat" @click="search()">
+        Search
+      </v-btn>
     </div>
   </div>
 </template>

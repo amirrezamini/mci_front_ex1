@@ -10,9 +10,8 @@
     "postinstall": "nuxt prepare",
     "start": "node .output/server/index.mjs",
     "lint:js": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
-    "lint:prettier": "prettier --check .",
-    "lint": "yarn lint:js && yarn lint:prettier",
-    "lintfix": "prettier --write --list-different . && yarn lint:js --fix"
+    "lint": "yarn lint:js",
+    "lintfix": "yarn lint:js --fix"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",

@@ -12,7 +12,7 @@ const p = withDefaults(defineProps<Props>(), {
 });
 
 const filteredUsers = computed(() =>
-  p.users.slice((p.page - 1) * p.records, p.page * p.records),
+  p.users.slice((p.page - 1) * p.records, p.page * p.records)
 );
 </script>
 

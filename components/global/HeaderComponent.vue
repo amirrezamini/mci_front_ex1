@@ -9,10 +9,10 @@ const emits = defineEmits<Emits>();
 <template>
   <v-app-bar flat :border="true">
     <template #prepend>
-      <v-app-bar-nav-icon @click="emits('click')"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="emits('click')" />
     </template>
     <template #append>
-      <v-avatar image="/memoji.png" size="40"></v-avatar>
+      <v-avatar image="/memoji.png" size="40" />
     </template>
   </v-app-bar>
 </template>

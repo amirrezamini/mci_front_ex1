@@ -1,37 +1,18 @@
 <script setup lang="ts">
 interface Props {
-  loading: boolean;
   users: User[];
-}
-
-interface Emits {
-  (e: "click"): void;
+  page: number;
+  records: number;
 }
 
 const p = withDefaults(defineProps<Props>(), {
-  loading: true,
   users: () => [],
+  page: 1,
+  records: 10,
 });
 
-const emits = defineEmits<Emits>();
-
-const headers: string[] = ["Id", "Name", "City"];
-
-const records = ref<number>(10);
-const page = ref<number>(1);
-const length = ref<number>(10);
-
-watch(
-  records,
-  (value: number) => {
-    page.value = 1;
-    length.value = Math.ceil(p.users.length / value);
-  },
-  { immediate: true },
-);
-
 const filteredUsers = computed(() =>
-  p.users.slice((page.value - 1) * records.value, page.value * records.value),
+  p.users.slice((p.page - 1) * p.records, p.page * p.records),
 );
 </script>
 
@@ -39,7 +20,9 @@ const filteredUsers = computed(() =>
   <v-table :hover="true">
     <thead>
       <tr>
-        <th v-for="(header, index) in headers" :key="index">{{ header }}</th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>City</th>
       </tr>
     </thead>
     <tbody>
@@ -51,46 +34,7 @@ const filteredUsers = computed(() =>
     </tbody>
     <tfoot>
       <tr>
-        <td>
-          <div class="d-inline-flex">
-            <v-select
-              id="records"
-              v-model="records"
-              :disabled="p.loading"
-              :hide-details="true"
-              :items="[10, 25, 100]"
-              density="compact"
-              name="records"
-              variant="outlined"
-            ></v-select>
-            <v-label for="records" text="Records per page" class="ms-2" />
-          </div>
-        </td>
-        <td class="pa-0">
-          <div class="d-inline-flex">
-            <v-pagination
-              v-model="page"
-              :disabled="p.loading"
-              density="compact"
-              rounded
-              :length="length"
-              :total-visible="4"
-            />
-          </div>
-        </td>
-        <td>
-          <v-tooltip text="Filter">
-            <template #activator="{ props }">
-              <v-btn
-                v-bind="props"
-                :disabled="p.loading"
-                icon="mdi-filter"
-                variant="text"
-                @click="emits('click')"
-              />
-            </template>
-          </v-tooltip>
-        </td>
+        <slot />
       </tr>
     </tfoot>
   </v-table>

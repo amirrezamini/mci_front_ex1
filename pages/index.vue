@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const { $api } = useNuxtApp();
+const {
+  $api,
+} = useNuxtApp();
 
 const loading = ref<boolean>(true);
 const dialog = ref<boolean>(false);
@@ -9,8 +11,8 @@ const records = ref<number>(10);
 const page = ref<number>(1);
 
 const users = ref<User[]>([]);
-await $api.user
-  .getUsers()
+
+await $api.user.getUsers()
   .then((value: User[]) => {
     users.value = value;
   })
@@ -19,49 +21,63 @@ await $api.user
   });
 
 const toggleDialog = () => (dialog.value = !dialog.value);
+
 const resetPage = () => (page.value = 1);
-const searchUser = (_inputs: Input[]) => {
-  dialog.value = !dialog.value;
 
+const resetFilter = () => {
+  toggleDialog();
   resetPage();
+};
 
+const searchUser = (_inputs: Input[]) => {
   inputs.value = _inputs;
   filterEnabled.value = true;
+  resetFilter();
 };
 
 const filteredUsers = computed(() => {
   if (filterEnabled.value) {
-    const i = inputs.value;
+    const [
+      filterInput,
+      nameInput,
+      cityInput,
+    ] = inputs.value;
 
-    const { condition, value } = i[0];
-    const nameEnabled: boolean = !!i[1];
-    const cityEnabled: boolean = !!i[2];
+    const {
+      condition,
+      value,
+    } = filterInput;
+
+    const nameEnabled = nameInput && !!nameInput.value;
+    const cityEnabled = cityInput && !!cityInput.value;
 
     return users.value.filter((user) => {
-      if (condition === "=") {
-        return user.id === +value;
-      } else if (cityEnabled) {
-        return condition === "<"
-          ? user.id < +value
-          : user.id > +value &&
-              user.name.toLowerCase() === i[1].value.toLowerCase() &&
-              user.city.toLowerCase() === i[2].value.toLowerCase();
-      } else if (nameEnabled) {
-        return condition === "<"
-          ? user.id < +value
-          : user.id > +value &&
-              user.name.toLowerCase() === i[1].value.toLowerCase();
-      } else {
-        return condition === "<" ? user.id < +value : user.id > +value;
+      let idComparison;
+      switch (condition) {
+        case "<":
+          idComparison = user.id < Number(value);
+          break;
+        case ">":
+          idComparison = user.id > Number(value);
+          break;
+        case "=":
+          idComparison = user.id === Number(value);
+          break;
+        default:
+          idComparison = true;
       }
+
+      const nameComparison = nameEnabled ? user.name.toLowerCase() === nameInput.value.toLowerCase() : true;
+      const cityComparison = cityEnabled ? user.city.toLowerCase() === cityInput.value.toLowerCase() : true;
+
+      return idComparison && nameComparison && cityComparison;
     });
   }
 
   return users.value;
 });
-const length = computed(() =>
-  Math.ceil(filteredUsers.value.length / records.value),
-);
+
+const length = computed(() => Math.ceil(filteredUsers.value.length / records.value));
 </script>
 
 <template>
@@ -126,7 +142,7 @@ const length = computed(() =>
       content-class="bg-white rounded pa-4"
       width="500"
     >
-      <filters-dialog @search-user="searchUser($event)" />
+      <filter-dialog @search-user="searchUser($event)" />
     </v-dialog>
   </v-container>
 </template>

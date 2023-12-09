@@ -10,9 +10,8 @@
     "postinstall": "nuxt prepare",
     "start": "node .output/server/index.mjs",
     "lint:js": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
-    "lint:prettier": "prettier --check .",
-    "lint": "yarn lint:js && yarn lint:prettier",
-    "lintfix": "prettier --write --list-different . && yarn lint:js --fix"
+    "lint": "yarn lint:js",
+    "lintfix": "yarn lint:js --fix"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
@@ -20,10 +19,7 @@
     "@typescript-eslint/parser": "^6.13.2",
     "dotenv": "^16.3.1",
     "eslint": "^8.55.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.0.1",
     "nuxt": "^3.8.2",
-    "prettier": "^3.1.0",
     "typescript": "^5.3.3",
     "vite-plugin-vuetify": "^1.0.2",
     "vue": "^3.3.10",

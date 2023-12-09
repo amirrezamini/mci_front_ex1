@@ -6,7 +6,7 @@ interface Emits {
 const emits = defineEmits<Emits>();
 
 const inputs = ref<Input[]>([
-  { header: "id", condition: "<", value: "1", error: "" },
+  { header: "id", condition: "<", value: "1", error: "", },
 ]);
 
 const addInput = () => {
@@ -21,48 +21,55 @@ const addInput = () => {
 };
 const deleteInput = (index: number) => inputs.value.splice(index, 1);
 
-const updateInput = (
-  value: FilterCondition,
-  type: "condition" | "value",
-  index: number,
-) => {
+const updateInput = (value: FilterCondition, type: "condition" | "value", index: number) => {
   inputs.value[index][type] = value;
+};
+
+const validateId = (id: string): string => {
+  if (!id || +id < 0) {
+    return "Id is invalid!";
+  } else if (+id < 1 && inputs.value[0].condition === "<") {
+    return "The minimum value for this condition is 1!";
+  }
+  return "";
+};
+
+const validateName = (name: string): string => {
+  if (containsDigits(name)) {
+    return "Name should not contain digits!";
+  }
+  return "";
+};
+
+const validateCity = (city: string): string => {
+  if (containsDigits(city)) {
+    return "City should not contain digits!";
+  }
+  return "";
 };
 
 const validateInputs = (): boolean => {
   let status: boolean = true;
 
-  inputs.value.map((input) => (input.error = ""));
-  const id = inputs.value[0].value;
-  const name = inputs.value[1] && inputs.value[1].value;
-  const city = inputs.value[2] && inputs.value[2].value;
+  inputs.value.forEach(input => (input.error = ""));
 
-  if (!id || +id < 0) {
-    inputs.value[0].error = "Id is invalid!";
-    status = false;
-  } else if (+id < 1 && inputs.value[0].condition === "<") {
-    inputs.value[0].error = "The minimum value for this condition is 1!";
-    status = false;
+  const [
+    idInput,
+    nameInput,
+    cityInput,
+  ] = inputs.value;
+
+  inputs.value[0].error = validateId(idInput.value);
+  status = !inputs.value[0].error;
+
+  if (nameInput.value) {
+    inputs.value[1].error = validateName(nameInput.value);
+    status = status && !inputs.value[1].error;
   }
 
-  if (inputs.value[1]) {
-    if (!name) {
-      inputs.value[1].error = "Name cannot be empty!";
-      status = false;
-    } else if (containsDigits(name)) {
-      inputs.value[1].error = "Name should not contain digits!";
-      status = false;
-    }
-  }
-
-  if (inputs.value[2]) {
-    if (!city) {
-      inputs.value[2].error = "City cannot be empty!";
-      status = false;
-    } else if (containsDigits(city)) {
-      inputs.value[2].error = "City should not contain digits!";
-      status = false;
-    }
+  if (cityInput.value) {
+    inputs.value[2].error = validateCity(cityInput.value);
+    status = status && !inputs.value[2].error;
   }
 
   return status;
@@ -83,7 +90,7 @@ const search = () => {
           <th>Header</th>
           <th>Condition</th>
           <th>Value</th>
-          <th></th>
+          <th />
         </tr>
       </thead>
       <tbody>
@@ -94,7 +101,7 @@ const search = () => {
           @update:condition="updateInput($event, 'condition', index)"
           @update:value="updateInput($event, 'value', index)"
           @delete="deleteInput(index)"
-        ></filter-input>
+        />
       </tbody>
     </table>
     <v-btn

@@ -11,10 +11,10 @@ interface Emits {
 const p = defineProps<Props>();
 const emits = defineEmits<Emits>();
 
-const conditions = ["<", "=", ">"];
+const conditions = ["<", "=", ">",];
 
 const isId = computed(() => p.input.header === "id");
-const availableConditions = computed(() => (isId.value ? conditions : ["="]));
+const availableConditions = computed(() => (isId.value ? conditions : ["=",]));
 </script>
 
 <template>

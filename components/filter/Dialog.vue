@@ -62,12 +62,12 @@ const validateInputs = (): boolean => {
   inputs.value[0].error = validateId(idInput.value);
   status = !inputs.value[0].error;
 
-  if (nameInput.value) {
+  if (nameInput && nameInput.value) {
     inputs.value[1].error = validateName(nameInput.value);
     status = status && !inputs.value[1].error;
   }
 
-  if (cityInput.value) {
+  if (cityInput && cityInput.value) {
     inputs.value[2].error = validateCity(cityInput.value);
     status = status && !inputs.value[2].error;
   }
